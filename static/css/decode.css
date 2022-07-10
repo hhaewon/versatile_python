@@ -1,0 +1,75 @@
+#title {
+  font-weight: bold;
+  text-align: center;
+  margin-top: 50px;
+  font-family: Tahoma, Geneva, sans-serif;
+}
+
+#pbox {
+  width: 500px;
+  margin: 0 auto;
+}
+
+#select {
+  width: 500px;
+  text-align: center;
+  margin: 0 auto;
+}
+
+p {
+  font-family: Tahoma, Geneva, sans-serif;
+  font-size: 25px;
+  position: relative;
+  left: 10px;
+  top: 5px;
+}
+
+#floatingTextarea {
+  margin: 0 auto;
+  margin-top: 0px;
+  color: black;
+  background-color: beige;
+  resize: none;
+  width: 500px;
+  min-height: 200px;
+}
+
+.inputTextarea {
+  font-size: 17px;
+  font-family: "Jua", sans-serif;
+}
+
+.result {
+  position: relative;
+  top: 50px;
+}
+
+.buttons {
+  margin: auto;
+  position: relative;
+  height: 30px;
+  width: 500px;
+}
+
+.btn-primary {
+  position: absolute;
+  top: 52%;
+  left: 85%;
+}
+
+.btn-success {
+  position: absolute;
+  top: 52%;
+  left: 65%;
+}
+
+input#input {
+  margin: 0 auto;
+  margin-top: 20px;
+  width: 500px;
+}
+
+.form-floating > p {
+  text-align: center;
+  font-size: 17px;
+}
