@@ -1,86 +1,71 @@
-import string
-import typing
+from typing import Dict, Union
+import json
 from pyodide import create_proxy
-import js
+from pyodide.http import pyfetch
+import asyncio
+from js import document, alert, console
 
 select = document.querySelector("select");
-buttonEncrypt = document.getElementById('encrypt');
-buttonDecrypt = document.querySelector("#decrypt");
-input = document.querySelector("#input");
-firstText = document.querySelector(".inputTextarea");
-secondText = document.querySelector(".result");
+input_key = document.querySelector("#input");
+button_encrypt = document.querySelector('#encrypt');
+button_decrypt = document.querySelector("#decrypt");
+first_text = document.querySelector(".inputTextarea");
+second_text = document.querySelector(".result");
+
+key: Union[None, int, str] = None
 
 
-selectvalue = None
-key = None
-SYMBOLS = ""
-SYMBOLS_EN: typing.List[str] = list(string.ascii_uppercase + string.ascii_lowercase)
-SYMBOLS_KO: typing.List[str] = [chr(i) for i in range(44032, 55204)]
-
-@create_proxy
-def changeHandler(event, mode: str):
-    translated = ""
-  
-    if (select.value == '어떤 언어를 암호화 할지 선택하세요.'):                                  
-        js.alert('암호화·복호화할 언어를 선택해주세요.')
-        return
-  
-    if (key == None):
-        js.alert('키 값을 입력해주세요.')
-        return
-  
-    for symbol in firstText.value:
-        if symbol in SYMBOLS:
-            symbol_index = SYMBOLS.index(symbol)
-            translated_index = 0
-          
-            if (mode == 'encrypt'):
-                translated_index = symbol_index + key
-            else:
-                translated_index = symbol_index - key
-          
-            if translated_index >= (length := len(SYMBOLS)):
-                translated_index %= length
-            elif translated_index < 0:
-                while translated_index < 0:
-                    translated_index += length
-                  
-            translated += SYMBOLS[translated_index]
-        else:
-            translated += symbol
-            
-    secondText.value = translated
-            
-   
-@create_proxy           
-def encryptHandler(event):
-    changeHandler(event, "encrypt")
-    
-@create_proxy
-def decryptHandler(event):
-    changeHandler(event, "decrypt")   
-    
-buttonEncrypt.addEventListener('click', encryptHandler)
-buttonDecrypt.addEventListener('click', decryptHandler)
-
-@create_proxy
-def selectHandler(event):
-    global SYMBOLS
-    select_value = tuple(event.target.options)[event.target.options.selectedIndex].value
-    
-    if select_value == 'en':
-        SYMBOLS = SYMBOLS_EN
-    elif select_value == 'ko':
-        SYMBOLS = SYMBOLS_KO
-
-select.addEventListener('change', selectHandler)
-
-@create_proxy
-def inputHandler(event):
+def get_body(mode: str):
     global key
-    if input.value == '':
+    key = key if key is not None else "None"
+    return json.dumps({"value": first_text.value,
+                       "language": select.value,
+                       "mode": mode,
+                       "key": key})
+
+
+async def make_request(url: str, method: str, mode: str, headers: Union[None, Dict[str, str]]=None):
+    if not headers:
+        headers = {"Content-Type": "application/json"}
+
+    response = await pyfetch(
+        url=url,
+        method=method,
+        headers=headers,
+        body=get_body(mode=mode)
+    )
+    if response.ok:
+        return await response.json()
+
+    if response.status == 400:
+        alert("언어와 키를 선택해 주세요.")
+
+
+@create_proxy
+async def encrypt_handler(event):
+    data = await make_request(url='http://127.0.0.1:5000/decode', method='POST', mode='encrypt')
+    if data is None:
+        return
+    second_text.value = data['value']
+
+
+@create_proxy
+async def decrypt_handler(event):
+    data = await make_request(url='http://127.0.0.1:5000/decode', method='POST', mode='decrypt')
+    if data is None:
+        return
+    second_text.value = data['value']
+
+
+@create_proxy
+def input_handler(_):
+    global key
+    if input_key.value == '':
         key = None
     else:
-        key = int(input.value)
+        key = int(input_key.value)
 
-input.addEventListener('input', inputHandler)
+
+button_encrypt.addEventListener('click', encrypt_handler)
+button_decrypt.addEventListener('click', decrypt_handler)
+input_key.addEventListener('input', input_handler)

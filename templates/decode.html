@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="ko">
-<head>
+<link>
   <meta charset="UTF-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -14,10 +14,17 @@
     type="text/javascript"></script>
   <link href="{{ url_for('static', filename='css/decode.css') }}" rel="stylesheet" type="text/css">
   </link>
-  <link rel="shortcut icon" href="{{ url_for('static', filename='favicon/decode_favicon.ico') }}">
+    <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}" />
+    <py-env>
+    </py-env>
 </head>
 <body>
-  <py-script src="{{ url_for('static', filename='python/decode.py') }}"></py-script>
+<py-script src="./static/python/decode.py"></py-script>
+<script>
+    const py_script = document.querySelector('py-script');
+    const now = new Date()
+    py_script.setAttribute("src", py_script.getAttribute('src')+'?version='+now.toDateString().replaceAll(" ", ""))
+</script>
   <h1 id="title">카이사르 암호</h1>
   <div id="pbox">
     <p>
@@ -26,7 +33,7 @@
     </p>
   </div>
   <select id="select" class="form-select" aria-label="Default select example">
-    <option selected disabled>어떤 언어를 암호화 할지 선택하세요.</option>
+    <option selected disabled value="undefined">어떤 언어를 암호화 할지 선택하세요.</option>
     <option value="ko">한글</option>
     <option value="en">영어</option>
   </select>
