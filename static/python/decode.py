@@ -2,15 +2,14 @@ from typing import Dict, Union
 import json
 from pyodide import create_proxy
 from pyodide.http import pyfetch
-import asyncio
 from js import document, alert, console
 
-select = document.querySelector("select");
-input_key = document.querySelector("#input");
-button_encrypt = document.querySelector('#encrypt');
-button_decrypt = document.querySelector("#decrypt");
-first_text = document.querySelector(".inputTextarea");
-second_text = document.querySelector(".result");
+select = document.querySelector("select")
+input_key = document.querySelector("#input")
+button_encrypt = document.querySelector('#encrypt')
+button_decrypt = document.querySelector("#decrypt")
+first_text = document.querySelector(".inputTextarea")
+second_text = document.querySelector(".result")
 
 key: Union[None, int, str] = None
 
@@ -24,7 +23,7 @@ def get_body(mode: str):
                        "key": key})
 
 
-async def make_request(url: str, method: str, mode: str, headers: Union[None, Dict[str, str]]=None):
+async def make_request(url: str, method: str, mode: str, headers: Union[None, Dict[str, str]] = None):
     if not headers:
         headers = {"Content-Type": "application/json"}
 
@@ -42,16 +41,16 @@ async def make_request(url: str, method: str, mode: str, headers: Union[None, Di
 
 
 @create_proxy
-async def encrypt_handler(event):
-    data = await make_request(url='http://127.0.0.1:5000/decode', method='POST', mode='encrypt')
+async def encrypt_handler(_):
+    data = await make_request(url='/decode', method='POST', mode='encrypt')
     if data is None:
         return
     second_text.value = data['value']
 
 
 @create_proxy
-async def decrypt_handler(event):
-    data = await make_request(url='http://127.0.0.1:5000/decode', method='POST', mode='decrypt')
+async def decrypt_handler(_):
+    data = await make_request(url='/decode', method='POST', mode='decrypt')
     if data is None:
         return
     second_text.value = data['value']

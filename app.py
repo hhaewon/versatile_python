@@ -1,16 +1,17 @@
 from string import ascii_lowercase, ascii_uppercase
-from typing import Any, List, Literal, Union
-import json
+from typing import Any, List, Union
+from json import loads
 from flask import Flask, render_template, request, jsonify, abort
 from flask.wrappers import Response
+
 
 app = Flask(__name__)
 
 
-def decode_value(value: str, language: str, key: Union[None, int], mode: str):
-    SYMBOLS_EN: List[str] = list(ascii_uppercase + ascii_lowercase)
-    SYMBOLS_KO: List[str] = [chr(i) for i in range(44032, 55204)]
-    SYMBOLS: List[str] = SYMBOLS_EN if language == 'en' else SYMBOLS_KO
+def decode_value(value: str, language: str, key: Union[None, int], mode: str) -> dict:
+    symbols_en: List[str] = list(ascii_uppercase + ascii_lowercase)
+    symbols_ko: List[str] = [chr(i) for i in range(44032, 55204)]
+    symbols: List[str] = symbols_en if language == 'en' else symbols_ko
     
     translated: str = ""
   
@@ -21,8 +22,8 @@ def decode_value(value: str, language: str, key: Union[None, int], mode: str):
         abort(400)
   
     for symbol in value:
-        if symbol in SYMBOLS:
-            symbol_index: int = SYMBOLS.index(symbol)
+        if symbol in symbols:
+            symbol_index: int = symbols.index(symbol)
             translated_index: int = 0
           
             if mode == 'encrypt':
@@ -30,13 +31,13 @@ def decode_value(value: str, language: str, key: Union[None, int], mode: str):
             else:
                 translated_index = symbol_index - key
           
-            if translated_index >= (length := len(SYMBOLS)):
+            if translated_index >= (length := len(symbols)):
                 translated_index %= length
             elif translated_index < 0:
                 while translated_index < 0:
                     translated_index += length
                   
-            translated += SYMBOLS[translated_index]
+            translated += symbols[translated_index]
         else:
             translated += symbol
             
@@ -44,14 +45,14 @@ def decode_value(value: str, language: str, key: Union[None, int], mode: str):
 
 
 @app.route('/decode', methods=['GET', 'POST'])
-def decode():
+def decode() -> Union[Response, str]:
     if request.method == "POST":
         data: Any = request.get_json(force=True)
 
         if type(data) != str:
             pass
         else:
-            data = json.loads(data)
+            data = loads(data)
 
         value = data["value"]
         language = data["language"]
@@ -62,6 +63,11 @@ def decode():
 
     elif request.method == 'GET':
         return render_template("decode.html")
+
+
+@app.route('/baskin-robbins')
+def baskin_robbins() -> Union[Response, str]:
+    return render_template("baskin_robbins.html")
 
 
 @app.route('/', methods=['GET'])

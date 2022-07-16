@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>베스킨 라빈스 31 게임</title>
+    <link rel="stylesheet" href="https://pyscript.net/alpha/pyscript.css" />
+    <script defer src="https://pyscript.net/alpha/pyscript.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet"
+    type="text/css"/>
+    <script defer src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/js/bootstrap.bundle.min.js"></script>
+    <link href="{{ url_for('static', filename='css/baskin_robbins.css') }}" />
+</head>
+<body>
+    <py-script></py-script>
+    <script>
+        const py_script = document.querySelector('py-script');
+        const now = new Date()
+        py_script.setAttribute("src", "{{ url_for('static', filename='python/baskin_robbins.py') }}"+'?version='+now.toString().replaceAll(" ", ""))
+    </script>
+    <h1 id="title">베스킨 라빈스 31 게임</h1>
+    <div>
+        <p>
+        규칙: <br />
+        1~3개의 숫자를 말할 수 있고, 31을 말하면 진다.
+        </p>
+    </div>
+    <select id="select" class="form-select" aria-label="Default select example">
+        <option selected disabled value="undefined">누가 먼저 시작할지 선택하세요</option>
+        <option value="1">플레이어</option>
+        <option value="2">AI</option>
+    </select>
+    <div class="form-floating">
+        <textarea readonly class="form-control" placeholder="Leave a comment here" id="floatingTextarea2" style="height: 100px"></textarea>
+    </div>
+    <div>
+        <p>예) 1, 2, 3 (쉼표로 구분)</p>
+        <input id="input" type="text" class="form-control" placeholder="숫자 입력!" aria-label="number"
+        aria-describedby="basic-addon1" />
+    </div>
+</body>
+</html>

@@ -19,11 +19,11 @@
     </py-env>
 </head>
 <body>
-<py-script src="./static/python/decode.py"></py-script>
+<py-script></py-script>
 <script>
     const py_script = document.querySelector('py-script');
     const now = new Date()
-    py_script.setAttribute("src", py_script.getAttribute('src')+'?version='+now.toDateString().replaceAll(" ", ""))
+    py_script.setAttribute("src", "{{ url_for('static', filename='python/decode.py')}}"+'?version='+now.toString().replaceAll(" ", ""))
 </script>
   <h1 id="title">카이사르 암호</h1>
   <div id="pbox">
@@ -37,7 +37,7 @@
     <option value="ko">한글</option>
     <option value="en">영어</option>
   </select>
-  <input id="input" type="text" class="form-control" placeholder="key 값" aria-label="Username"
+  <input id="input" type="number" class="form-control" placeholder="key 값" aria-label="key"
     aria-describedby="basic-addon1" />
   <div class="form-floating">
     <p>암호화·복호화 할 문장 예) I am hungry</p>
