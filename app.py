@@ -8,6 +8,10 @@ from flask.wrappers import Response
 app = Flask(__name__)
 
 
+def create_app():
+    return app
+
+
 def decode_value(value: str, language: str, key: Union[None, int], mode: str) -> dict:
     symbols_en: List[str] = list(ascii_uppercase + ascii_lowercase)
     symbols_ko: List[str] = [chr(i) for i in range(44032, 55204)]

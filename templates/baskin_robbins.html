@@ -19,6 +19,10 @@
     </script>
     <h1 id="title">베스킨 라빈스 31 게임</h1>
     <div>
+        <p>현재 숫자</p>
+        <h3 id="count">0</h3>
+    </div>
+    <div>
         <p>
         규칙: <br />
         1~3개의 숫자를 말할 수 있고, 31을 말하면 진다.
@@ -30,12 +34,13 @@
         <option value="2">AI</option>
     </select>
     <div class="form-floating">
-        <textarea readonly class="form-control" placeholder="Leave a comment here" id="floatingTextarea2" style="height: 100px"></textarea>
+        <textarea readonly class="form-control" placeholder="Leave a comment here" id="floatingTextarea2" maxlength="1200"></textarea>
     </div>
     <div>
         <p>예) 1, 2, 3 (쉼표로 구분)</p>
         <input id="input" type="text" class="form-control" placeholder="숫자 입력!" aria-label="number"
         aria-describedby="basic-addon1" />
     </div>
+    <button type="button" class="btn btn-success" id="restart">재시작</button>
 </body>
 </html>
